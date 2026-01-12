@@ -1,11 +1,11 @@
 import { useState, type ChangeEvent, type FormEvent } from "react"
 import { useNavigate } from "react-router-dom"
 import axios, { AxiosError } from "axios"
-import { login, createUser } from "../api/auth"
+import { createUser } from "../api/auth"
 import { type ApiErrorResponse } from "../types/user"
 
-const LoginPage = () => {
-    const [state, setState] = useState("login")
+const SignUpPage = () => {
+
     const [errorMessage, setErrorMessage] = useState("")
     const navigate = useNavigate()
 
@@ -20,24 +20,13 @@ const LoginPage = () => {
         setErrorMessage("")
 
         // バリデーションチェック
-        if(formData.email === "" || formData.password === "" || (state === "register" && formData.name === "")){
-            setErrorMessage("メールアドレスとパスワードを入力してください。")
+        if(formData.email === "" || formData.password === "" || formData.name === ""){
+            setErrorMessage("名前、メールアドレスとパスワードを入力してください。")
             return
         }
 
         try {
-            if (state === "login") {
-                // --- ログイン処理 ---
-                const loginResponse = await login({
-                    email: formData.email,
-                    password: formData.password
-                })
-
-                localStorage.setItem("token", loginResponse.token)
-                navigate("/home")
-
-            } else {
-                // --- サインアップ処理 (ここを追加！) ---
+            // --- サインアップ処理 (ここを追加！) ---
                 // ※createUserの実装に合わせて引数を調整してください
                 const registerResponse = await createUser({
                     name: formData.name,
@@ -52,9 +41,7 @@ const LoginPage = () => {
                 } else {
                     // トークンが返ってこない仕様ならログイン画面へ誘導
                     alert("登録しました。ログインしてください。")
-                    setState("login")
                 }
-            }
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -78,17 +65,14 @@ const LoginPage = () => {
     return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <form aria-label="auth-form" onSubmit={handleSubmit} className="sm:w-[350px] w-full text-center border border-gray-300/60 rounded-2xl px-8 bg-white">
-                    <h1 className="text-gray-900 text-3xl mt-10 font-medium">{state === "login" ? "Login" : "Sign up"}</h1>
+                    <h1 className="text-gray-900 text-3xl mt-10 font-medium">Sign Up</h1>
                     <p className="text-gray-500 text-sm mt-2">Please sign in to continue</p>
                     
-                    {/* 名前入力欄：サインアップ時のみ表示 */}
-                    {state !== "login" && (
-                        <div className="flex items-center mt-6 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
+                    <div className="flex items-center mt-6 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user-round-icon lucide-user-round"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /></svg>
                             {/* required は外しています */}
                             <input type="text" name="name" placeholder="Name" className="border-none outline-none ring-0" value={formData.name} onChange={handleChange} />
-                        </div>
-                    )}
+                    </div>
                     
                     {/* エラーメッセージ表示エリア */}
                     {errorMessage && (
@@ -109,16 +93,16 @@ const LoginPage = () => {
                         <button className="text-sm" type="reset">Forget password?</button>
                     </div>
                     <button aria-label="submit button" type="submit" className="mt-2 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity">
-                        {state === "login" ? "ログイン" : "登録"}
+                        Sign Up
                     </button>
                     <p onClick={() => {
-                        setState(prev => prev === "login" ? "register" : "login")
+        
                         setErrorMessage("") // モード切替時にエラーを消す
-                    }} className="text-gray-500 text-sm mt-3 mb-11 cursor-pointer">{state === "login" ? "Don't have an account?" : "Already have an account?"} <a className="text-indigo-500 hover:underline">click here</a></p>
+                    }} className="text-gray-500 text-sm mt-3 mb-11 cursor-pointer">"Already have an account?"<a className="text-indigo-500 hover:underline">click here</a></p>
                 </form>
             </div>
     )
 }
 
 
-export default LoginPage
+export default SignUpPage

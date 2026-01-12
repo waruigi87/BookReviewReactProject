@@ -98,6 +98,7 @@ const SignUpPage = () => {
                     <p onClick={() => {
         
                         setErrorMessage("") // モード切替時にエラーを消す
+                        navigate("/login")
                     }} className="text-gray-500 text-sm mt-3 mb-11 cursor-pointer">"Already have an account?"<a className="text-indigo-500 hover:underline">click here</a></p>
                 </form>
             </div>

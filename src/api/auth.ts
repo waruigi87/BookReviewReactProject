@@ -7,7 +7,7 @@ interface LoginPayload{
 }
 
 export const login = async (data: LoginPayload) : Promise<LoginResponse> => {
-    const response = await apiClient.post<LoginResponse>("/signin", data);
+    const response = await apiClient.post<LoginResponse>("/login", data);
     return response.data;
 }
 

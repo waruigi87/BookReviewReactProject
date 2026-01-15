@@ -11,3 +11,7 @@ export interface ApiErrorResponse{
 export interface CreateUserResponse {
     token: string;
 }
+
+export interface UserIconResponse{
+    iconUrl : string;
+}

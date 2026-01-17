@@ -77,7 +77,6 @@ const SignUpPage = () => {
             maxHeight: 400,
             mimeType: 'image/jpeg', // jpgに変換
             success(result) {
-                // 念のためサイズチェック（Compressorjsはかなり圧縮してくれますが）
                 if (result.size > 1024 * 1024) {
                     setErrorMessage("画像サイズが大きすぎます。別の画像を選択してください。");
                     return;

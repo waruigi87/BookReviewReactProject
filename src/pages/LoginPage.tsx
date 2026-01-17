@@ -1,14 +1,17 @@
 import { useState} from "react"
 import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
 import axios, { AxiosError } from "axios"
 import { login} from "../api/auth"
 import { type ApiErrorResponse } from "../types/user"
 import { type LoginPayload } from "../api/auth"
 import { useForm } from "react-hook-form"
+import { setAuth } from "../features/auth"
 
 const LoginPage = () => {
     const [errorMessage, setErrorMessage] = useState("")
     const navigate = useNavigate()
+    const dispatch = useDispatch();
 
     const { register, handleSubmit, formState: { errors } } 
     = useForm<LoginPayload>({ mode: "onChange" })
@@ -22,7 +25,11 @@ const LoginPage = () => {
                     password: data.password
                 })
 
-                localStorage.setItem("token", loginResponse.token)
+                dispatch(setAuth({
+                    token: loginResponse.token,
+                    username:loginResponse.username
+                }))
+                
                 navigate("/home")
 
         } catch (error) {

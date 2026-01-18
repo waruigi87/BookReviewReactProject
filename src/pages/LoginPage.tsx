@@ -2,7 +2,7 @@ import { useState} from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import axios, { AxiosError } from "axios"
-import { login} from "../api/auth"
+import { login , getUserInfo} from "../api/auth"
 import { type ApiErrorResponse } from "../types/user"
 import { type LoginPayload } from "../api/auth"
 import { useForm } from "react-hook-form"
@@ -25,9 +25,11 @@ const LoginPage = () => {
                     password: data.password
                 })
 
-                dispatch(setAuth({
+                 const userInfoResponse = await getUserInfo(loginResponse.token);
+
+                 dispatch(setAuth({
                     token: loginResponse.token,
-                    username:loginResponse.username
+                    username : userInfoResponse.name
                 }))
                 
                 navigate("/home")
@@ -44,7 +46,7 @@ const LoginPage = () => {
                 setErrorMessage("予期せぬエラーが発生しました。")
             }
         }
-    } // 👈 【修正1】ここで handleSubmit を閉じる！
+    } 
 
     
 

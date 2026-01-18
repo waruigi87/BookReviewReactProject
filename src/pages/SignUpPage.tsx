@@ -6,10 +6,15 @@ import { type ApiErrorResponse } from "../types/user"
 import { useForm } from "react-hook-form"
 import { type CreateUserPayload } from "../api/auth"
 import Compressor from "compressorjs"
+import { useDispatch } from "react-redux" 
+import { setAuth } from "../features/auth"  
+
+
 
 const SignUpPage = () => {
 
     const navigate = useNavigate()
+    const dispatch = useDispatch();
 
     const [errorMessage, setErrorMessage] = useState("")
 
@@ -24,7 +29,7 @@ const SignUpPage = () => {
         console.log(data)
 
         try {
-            // --- サインアップ処理 (ここを追加！) ---
+           
                 // ※createUserの実装に合わせて引数を調整してください
                 const registerResponse = await createUser({
                     name: data.name,
@@ -34,11 +39,24 @@ const SignUpPage = () => {
                 
                 // サインアップ成功時の挙動（トークンがあればログイン、なければログイン画面へなど）
                 if (registerResponse.token) {
-                    localStorage.setItem("token", registerResponse.token)
+                            dispatch(setAuth({
+                        token: registerResponse.token,
+                        username: data.name  // 新規登録時は入力した name を使う
+                    }))
+                    
+                    // アイコンのアップロード処理
+                    if (avatarFile) {
+                        try {
+                            await uploadUserIcon(avatarFile);
+                        } catch (iconError) {
+                            console.error("アイコンのアップロードに失敗しました", iconError);
+                            alert("ユーザー登録は完了しましたが、画像のアップロードに失敗しました。");
+                        }
+                    }
                     navigate("/home")
                 } else {
-                    // トークンが返ってこない仕様ならログイン画面へ誘導
                     alert("登録しました。ログインしてください。")
+                    navigate("/login")
                 }
 
                 if (avatarFile) {

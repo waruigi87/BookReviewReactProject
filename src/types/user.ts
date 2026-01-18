@@ -1,6 +1,5 @@
 export interface LoginResponse {
     token: string;
-    username: string;
 }
 
 export interface ApiErrorResponse{
@@ -13,6 +12,7 @@ export interface CreateUserResponse {
     token: string;
 }
 
-export interface UserIconResponse{
+export interface UserInfoResponse{
+    name : string
     iconUrl : string;
 }

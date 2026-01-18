@@ -1,14 +1,24 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearAuth } from "../features/auth";
 import { useNavigate } from "react-router-dom";
+import { type RootState } from "../app/store";
 
 const Header = () => {
+    const token = useSelector((state: RootState) => state.auth.token);
+    const username = useSelector((state: RootState) => state.auth.username)
+
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const onHandle = () => {
-        dispatch(clearAuth());
-        navigate("/login"); 
+
+        if(token == null){
+            navigate("/login"); 
+        }else{
+            dispatch(clearAuth());
+            navigate("/login"); 
+        }
+        
         
     }
    
@@ -19,12 +29,14 @@ const Header = () => {
                 BookReview
             </a>
 
+
             {/* Desktop Menu */}
             <div className="hidden sm:flex items-center gap-8">
+                <a href="">{username ? "Welcome back! " + username : ""}</a>
                 <a href="/home">Home</a>
                 <a href="/about">About</a>
                 <button onClick={onHandle} className="cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full">
-                    Logout
+                    {token ? "Logout" : "Login" } 
                 </button>
             </div>
 

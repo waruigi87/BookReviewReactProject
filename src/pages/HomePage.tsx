@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { fetchBooks } from "../api/book"
+import { fetchBooks, fetchPublicBooks } from "../api/book"
 import { type bookListResponse } from "../types/contents"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -9,6 +9,7 @@ import { Pagination } from "../components/pagination"
 import { type RootState } from "../app/store"
 
 const HomePage = () => {
+  const token = useSelector((state:RootState) => state.auth.token);
 
   const offset = useSelector((state:RootState) => state.paging.value);
   const [books, setBooks] = useState<bookListResponse[]>([])
@@ -28,8 +29,15 @@ const HomePage = () => {
     const loadBooks = async () => {
       setLoading(true);
       try {
-        const data = await fetchBooks(offset) // デフォルトで offset=0
-        setBooks(data)
+        if(token == null){
+          const data = await fetchPublicBooks(offset);
+          setBooks(data)
+
+        }else{
+          const data = await fetchBooks(offset) // デフォルトで offset=0
+          setBooks(data)
+        }
+        
         
       } catch (err) {
         // エラーハンドリング

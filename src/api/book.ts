@@ -15,3 +15,13 @@ export const fetchBooks = async (offset: number) : Promise<bookListResponse[]> =
     });
     return response.data;
 }
+
+export const fetchPublicBooks = async (offset: number) : Promise<bookListResponse[]> => {
+
+    const response = await apiClient.get<bookListResponse[]>("/public/books",{
+        params : {
+            offset: offset
+        }
+    });
+    return response.data;
+}

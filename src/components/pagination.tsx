@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface PaginationProps {
   offset: number; // 現在のoffset値 (0, 10, 20...)
   limit?: number; // 1ページあたりの表示件数 (デフォルト10)
@@ -31,14 +29,12 @@ export const Pagination = ({ offset, limit = 10, onChange }: PaginationProps) =>
     onChange(newOffset);
   };
 
-  // 共通のボタンスタイル
   const baseButtonClass = "flex items-center justify-center active:scale-95 w-9 md:w-12 h-9 md:h-12 aspect-square rounded-md transition-all";
   const activeClass = "bg-indigo-500 text-white";
   const inactiveClass = "bg-white border border-gray-200 hover:bg-gray-100/70 text-gray-500";
 
   return (
     <div className="flex items-center gap-2">
-      {/* Previous Button */}
       <button 
         type="button" 
         aria-label="Previous" 
@@ -66,7 +62,6 @@ export const Pagination = ({ offset, limit = 10, onChange }: PaginationProps) =>
         ))}
       </div>
   
-      {/* Next Button */}
       <button 
         type="button" 
         aria-label="Next" 

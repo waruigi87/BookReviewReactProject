@@ -1,39 +1,52 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import About from './pages/About'
+import Layout from './components/Layout'
 import './App.css'
 import SignUpPage from './pages/SignUpPage'
 import { ProtectedRoute, PublicRoute } from './components/ProtectedRoute'
-import Header from './components/Header'
 
 function App() {
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={
+          <PublicRoute>
+            <Layout>
+              <HomePage />
+            </Layout>
+          </PublicRoute>
+        } />
         
         <Route path="/login" element= {
           <PublicRoute>
-            <LoginPage />
+            <Layout>
+              <LoginPage />
+            </Layout>
           </PublicRoute>
           } />
         <Route path="/signup" element= {
           <PublicRoute>
+            <Layout>
               <SignUpPage />
+            </Layout>
+              
           </PublicRoute>
           } />
         <Route path="/home" element= {
           <ProtectedRoute>
-            <Header />
-            <HomePage />
+            <Layout>
+              <HomePage />
+            </Layout>
           </ProtectedRoute>
           } />
         <Route path="/about" element= {
           <ProtectedRoute>
-            <Header />
-            <About />
+            <Layout>
+              <About />
+            </Layout>   
           </ProtectedRoute>
           
           } />

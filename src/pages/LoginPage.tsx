@@ -6,6 +6,7 @@ import { login , getUserInfo} from "../api/auth"
 import { type ApiErrorResponse } from "../types/user"
 import { type LoginPayload } from "../api/auth"
 import { useForm } from "react-hook-form"
+import { setProfile } from "../features/profile"
 import { setAuth } from "../features/auth"
 
 const LoginPage = () => {
@@ -28,8 +29,12 @@ const LoginPage = () => {
                  const userInfoResponse = await getUserInfo(loginResponse.token);
 
                  dispatch(setAuth({
-                    token: loginResponse.token,
-                    username : userInfoResponse.name
+                    token : loginResponse.token
+                 }))
+
+                 dispatch(setProfile({
+                    name : userInfoResponse.name,
+                    iconurl : userInfoResponse.iconUrl
                 }))
                 
                 navigate("/home")

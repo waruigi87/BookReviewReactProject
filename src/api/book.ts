@@ -2,8 +2,10 @@ import { apiClient } from "./axios";
 import { type bookListResponse } from "../types/contents";
 
 
-export const fetchBooks = async (offset: number) : Promise<bookListResponse[]> => {
-    const token = localStorage.getItem("token");
+const LIMIT = 10;  // 1ページあたりの件数
+
+export const fetchBooks = async (page: number, token : string) : Promise<bookListResponse[]> => {
+    const offset = (page - 1) * LIMIT;
 
     const response = await apiClient.get<bookListResponse[]>("/books",{
         params : {
@@ -16,8 +18,9 @@ export const fetchBooks = async (offset: number) : Promise<bookListResponse[]> =
     return response.data;
 }
 
-export const fetchPublicBooks = async (offset: number) : Promise<bookListResponse[]> => {
-
+export const fetchPublicBooks = async (page: number) : Promise<bookListResponse[]> => {
+    const offset = (page - 1) * LIMIT;
+    
     const response = await apiClient.get<bookListResponse[]>("/public/books",{
         params : {
             offset: offset

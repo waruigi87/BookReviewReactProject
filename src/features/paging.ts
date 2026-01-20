@@ -3,24 +3,27 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 export const pagingSlice = createSlice({
     name : 'paging',
     initialState: {
-        value : 0
+        page : 1
     },
     reducers: {
-        increment : state => {
-            state.value += 1
+        nextPage: (state) => {
+            state.page += 1;
         },
-        decrement : state => {
-            state.value = Math.max(0, state.value - 1)
+        prevPage: (state) => {
+            if (state.page > 1) {
+                state.page -= 1;
+            }
         },
-        incrementByAmount : (state, action : PayloadAction<number>) =>{
-            state.value += action.payload
+        goToPage: (state, action: PayloadAction<number>) => {
+            state.page = action.payload;
         },
-        setOffset: (state, action: PayloadAction<number>) => {
-        state.value = action.payload;
+        resetPage: (state) => {
+            state.page = 1;
+        }
     }
-    }
+    
 
 });
 
-export const { increment, decrement, incrementByAmount, setOffset} = pagingSlice.actions
-export default pagingSlice.reducer
+export const { nextPage, prevPage, goToPage, resetPage } = pagingSlice.actions;
+export default pagingSlice.reducer;

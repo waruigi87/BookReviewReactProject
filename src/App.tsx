@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import About from './pages/About'
+import Profile from './pages/Profile'
 import Layout from './components/Layout'
 import './App.css'
 import SignUpPage from './pages/SignUpPage'
@@ -46,6 +47,14 @@ function App() {
           <ProtectedRoute>
             <Layout>
               <About />
+            </Layout>   
+          </ProtectedRoute>
+          
+          } />
+          <Route path="/profile" element= {
+          <ProtectedRoute>
+            <Layout>
+              <Profile />
             </Layout>   
           </ProtectedRoute>
           

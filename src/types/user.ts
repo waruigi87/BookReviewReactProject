@@ -15,4 +15,5 @@ export interface CreateUserResponse {
 export interface UserInfoResponse{
     name : string
     iconUrl : string;
+    token: string;
 }

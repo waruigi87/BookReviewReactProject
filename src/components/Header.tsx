@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { clearAuth } from "../features/auth";
+import { clearProfile } from "../features/profile";
 import { useNavigate } from "react-router-dom";
 import { type RootState } from "../app/store";
 
 const Header = () => {
     const token = useSelector((state: RootState) => state.auth.token);
-    const username = useSelector((state: RootState) => state.auth.username)
-
+    const username = useSelector((state: RootState) => state.profile.name)
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -16,6 +16,7 @@ const Header = () => {
             navigate("/login"); 
         }else{
             dispatch(clearAuth());
+            dispatch(clearProfile());
             navigate("/login"); 
         }
         
@@ -33,8 +34,15 @@ const Header = () => {
             {/* Desktop Menu */}
             <div className="hidden sm:flex items-center gap-8">
                 <a href="">{username ? "Welcome back! " + username : ""}</a>
-                <a href="/home">Home</a>
-                <a href="/about">About</a>
+                {token ? 
+                    <>
+                        <a href="/home">Home</a>
+                        <a href="/about">About</a>
+                        <a href="/profile">Settings</a>
+                    </>
+                    
+                : <></>}
+                
                 <button onClick={onHandle} className="cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full">
                     {token ? "Logout" : "Login" } 
                 </button>

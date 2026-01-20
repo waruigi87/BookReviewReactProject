@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import pagingReducer from "../features/paging";
 import authReducer from "../features/auth";
+import profileReducer from "../features/profile"
 const store = configureStore({
     reducer: {
         paging: pagingReducer,
-        auth : authReducer
+        auth : authReducer,
+        profile : profileReducer
     }
 });
 

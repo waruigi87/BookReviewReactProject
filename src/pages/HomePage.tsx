@@ -3,26 +3,19 @@ import { fetchBooks, fetchPublicBooks } from "../api/book"
 import { type bookListResponse } from "../types/contents"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
-import { useSelector, useDispatch } from 'react-redux'
-import { setOffset } from "../features/paging"
+import { useSelector } from 'react-redux'
 import { Pagination } from "../components/pagination"
 import { type RootState } from "../app/store"
 
 const HomePage = () => {
   const token = useSelector((state:RootState) => state.auth.token);
 
-  const offset = useSelector((state:RootState) => state.paging.value);
+  const page = useSelector((state:RootState) => state.paging.page);
   const [books, setBooks] = useState<bookListResponse[]>([])
-  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
-
-  // ページ変更ハンドラ
-  const handlePageChange = (newOffset: number) => {
-    dispatch(setOffset(newOffset));
-  };
 
   useEffect(() => {
     // 非同期関数を定義して実行
@@ -30,11 +23,11 @@ const HomePage = () => {
       setLoading(true);
       try {
         if(token == null){
-          const data = await fetchPublicBooks(offset);
+          const data = await fetchPublicBooks(page);
           setBooks(data)
 
         }else{
-          const data = await fetchBooks(offset) // デフォルトで offset=0
+          const data = await fetchBooks(page, token) // デフォルトで offset=0
           setBooks(data)
         }
         
@@ -53,7 +46,7 @@ const HomePage = () => {
     }
 
     loadBooks()
-  }, [navigate, offset]) // 初回マウント時に実行
+  }, [navigate, page]) // 初回マウント時に実行
 
   if (loading) return <div className="text-center mt-20">Loading...</div>
   if (error) return <div className="text-center mt-20 text-red-500">{error}</div>
@@ -99,9 +92,6 @@ const HomePage = () => {
       </div>
       <div className="flex justify-center mt-8">
         <Pagination 
-            offset={offset} 
-            limit={10} 
-            onChange={handlePageChange} 
         />
       </div>
     </div>

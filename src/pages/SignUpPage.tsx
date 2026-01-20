@@ -1,13 +1,16 @@
 import React, { useState} from "react"
 import {  useNavigate } from "react-router-dom"
 import axios, { AxiosError } from "axios"
-import { createUser , uploadUserIcon} from "../api/auth"
+import { createUser , uploadUserIcon, getUserInfo} from "../api/auth"
 import { type ApiErrorResponse } from "../types/user"
 import { useForm } from "react-hook-form"
 import { type CreateUserPayload } from "../api/auth"
 import Compressor from "compressorjs"
 import { useDispatch } from "react-redux" 
 import { setAuth } from "../features/auth"  
+import { setProfile } from "../features/profile"
+import { useSelector } from "react-redux"
+import { type RootState } from "../app/store"
 
 
 
@@ -15,6 +18,8 @@ const SignUpPage = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch();
+
+    const token = useSelector((state : RootState) => state.auth.token);
 
     const [errorMessage, setErrorMessage] = useState("")
 
@@ -36,18 +41,25 @@ const SignUpPage = () => {
                     email: data.email,
                     password: data.password
                 })
+
+                const userInfoResponse = await getUserInfo(registerResponse.token);
                 
                 // サインアップ成功時の挙動（トークンがあればログイン、なければログイン画面へなど）
                 if (registerResponse.token) {
-                            dispatch(setAuth({
-                        token: registerResponse.token,
-                        username: data.name  // 新規登録時は入力した name を使う
+                    dispatch(setAuth({
+                        token: registerResponse.token
                     }))
+
+                    dispatch(setProfile({
+                        iconurl : userInfoResponse.iconUrl,
+                        name : data.name
+                    }))
+                    
                     
                     // アイコンのアップロード処理
                     if (avatarFile) {
                         try {
-                            await uploadUserIcon(avatarFile);
+                            await uploadUserIcon(avatarFile, token);
                         } catch (iconError) {
                             console.error("アイコンのアップロードに失敗しました", iconError);
                             alert("ユーザー登録は完了しましたが、画像のアップロードに失敗しました。");
@@ -61,7 +73,7 @@ const SignUpPage = () => {
 
                 if (avatarFile) {
                 try {
-                    await uploadUserIcon(avatarFile);
+                    await uploadUserIcon(avatarFile, token);
                 } catch (iconError) {
                     // ユーザー登録自体は成功しているので、ここはログ出力程度にして
                     // ユーザーには警告を出すか、そのまま進めるか判断が必要です。
